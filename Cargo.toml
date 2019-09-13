@@ -1,0 +1,13 @@
+[package]
+name = "pm"
+version = "0.1.0"
+authors = ["hskang9 <hskang9@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+structopt = "0.3.1"
+serde_json = "1.0"
+[dependencies.shell]
+git = "https://github.com/google/rust-shell.git"

@@ -1,0 +1,11 @@
+/home/hskang9/projectman/target/rls/debug/deps/unicode_segmentation-c509dbfe091fb836.rmeta: /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/lib.rs /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/grapheme.rs /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/tables.rs /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/word.rs /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/sentence.rs
+
+/home/hskang9/projectman/target/rls/debug/deps/libunicode_segmentation-c509dbfe091fb836.rlib: /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/lib.rs /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/grapheme.rs /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/tables.rs /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/word.rs /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/sentence.rs
+
+/home/hskang9/projectman/target/rls/debug/deps/unicode_segmentation-c509dbfe091fb836.d: /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/lib.rs /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/grapheme.rs /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/tables.rs /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/word.rs /home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/sentence.rs
+
+/home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/lib.rs:
+/home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/grapheme.rs:
+/home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/tables.rs:
+/home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/word.rs:
+/home/hskang9/.cargo/registry/src/github.com-1ecc6299db9ec823/unicode-segmentation-1.3.0/src/sentence.rs:
