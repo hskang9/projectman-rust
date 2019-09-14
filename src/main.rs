@@ -1,9 +1,17 @@
 use structopt::StructOpt;
 use std::env;
 use serde_json::json;
+use serde::{Serialize,Deserialize};
 use std::fs;
 #[macro_use] extern crate shell;
 use dialoguer::{theme::ColorfulTheme, theme::CustomPromptCharacterTheme, Select, Input};
+
+#[derive(Serialize,Deserialize,Debug)]
+struct Project {
+    name: String,
+    path: String,
+    editor: String
+}
 
 #[derive(StructOpt)]
 struct Cli {
@@ -12,11 +20,6 @@ struct Cli {
     project: Option<String>
 }
 
-struct Project {
-    name: String,
-    path: String,
-    editor: String
-}
 
 fn main() {
     let default = json!({
@@ -38,12 +41,17 @@ fn main() {
     
 }
 
-fn browse(settings_data: serde_json::value::Value) {
+fn list_projects(settings_data: serde_json::value::Value) -> Vec<String> {
     let mut selections = vec![];
     for i in 0..settings_data["projects"].as_array().unwrap().len() {
-        let selection = settings_data["projects"][i]["name"].as_str().unwrap();
+        let selection = settings_data["projects"][i]["name"].as_str().unwrap().to_string();
         selections.push(selection.clone());
     }
+    selections
+}
+
+fn browse(settings_data: serde_json::value::Value) {
+    let selections = list_projects(settings_data.clone());
 
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("? Select project to open")
@@ -51,7 +59,7 @@ fn browse(settings_data: serde_json::value::Value) {
         .items(&selections[..])
         .interact()
         .unwrap();
-    let result = selections[selection.clone()];
+    let result = &selections[selection.clone()];
     println!("Opening {}...", result.clone());
     open_project(settings_data.clone(), Some(result.to_string()));
 }
@@ -74,6 +82,7 @@ fn open_project(settings_data: serde_json::value::Value, project: Option<String>
 }
 
 fn add_project(settings_data: serde_json::value::Value) {
+
     let mut next_settings = settings_data.clone();
     let theme = CustomPromptCharacterTheme::new('\u{2692}');
     let project_name: String = Input::with_theme(&theme)
@@ -81,10 +90,28 @@ fn add_project(settings_data: serde_json::value::Value) {
         .interact()
         .unwrap();
     let path = env::current_dir();
+    let new_project:Project = Project{ name: project_name, path: path.unwrap().display().to_string(), editor: settings_data["commandToOpen"].as_str().unwrap().to_string()};
+    let p = serde_json::to_value(new_project).unwrap();
+    next_settings["projects"].as_array_mut().unwrap().push(p);
+
+    // Save next settings file
+    println!("{:?}", next_settings);
 }
 
 fn remove_project(settings_data: serde_json::value::Value) {
+    let mut next_settings = settings_data.clone();
+    let selections = list_projects(settings_data);
 
+    let selection = Select::with_theme(&ColorfulTheme::default())
+        .with_prompt("? Select project to remove")
+        .default(0)
+        .items(&selections[..])
+        .interact()
+        .unwrap();
+    let result = &selections[selection.clone()];
+    
+    // Remove the project in json file
+    
 }
 
 fn set_editor(settings_data: serde_json::value::Value) { 
