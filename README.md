@@ -1,14 +1,15 @@
 # projectman-rust
-Projectman meets Rust
 
+Projectman meets Rust
 
 # Optimized memory
 
-total size of 0.3MB in release mode(to be updated)
+Total size of From the original(43MB) -> To Rust version(3.7MB)
 
 # compiled to wasm
 
 and deployed to wapm(to be updated)
+
 
 # Credits
 

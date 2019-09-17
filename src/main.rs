@@ -9,7 +9,6 @@ use dialoguer::{theme::ColorfulTheme, theme::CustomPromptCharacterTheme, Select,
 use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
-use std::path::Path;
 
 #[derive(Serialize,Deserialize,Debug)]
 struct Project {
@@ -25,7 +24,7 @@ struct Cli {
     project: Option<String>
 }
 
-
+// Prompt Constant Variables
 static OPEN_PROMPT: &str = "? Select project to open";
 static REMOVE_PROMPT: &str = "? Select project to remove";
 static SETEDITOR_PROMPT: &str = "? Select project to set editor";
@@ -122,12 +121,11 @@ fn save_settings(settings_data: serde_json::value::Value) {
     let settings_dir: String = format!("{}/.projectman/settings_rust.json", dirs::home_dir().unwrap().display());
     let f = serde_json::to_string(&settings_data).unwrap();
     let mut file = File::create(&settings_dir).expect("Unable to write"); 
-    file.write_all(f.as_bytes()); 
+    file.write_all(f.as_bytes()).expect("Cannot write to a file"); 
 }
 
 fn remove_project(settings_data: serde_json::value::Value) {
     let mut next_settings = settings_data.clone();
-    let selections = list_projects(settings_data.clone());
 
     let result = browse(REMOVE_PROMPT, settings_data);
 
@@ -147,8 +145,6 @@ fn delete_project_json(mut settings_data: serde_json::value::Value, project: Str
 
 fn set_editor(settings_data: serde_json::value::Value) {
     let mut next_settings = settings_data.clone();
-    let selections = list_projects(settings_data.clone());
-
     let result = browse(SETEDITOR_PROMPT, settings_data);
 
     let theme = CustomPromptCharacterTheme::new('>');
