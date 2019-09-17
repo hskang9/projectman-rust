@@ -1,6 +1,8 @@
 # projectman-rust
 
 Projectman meets Rust
+This is the rust port of projectman.
+
 
 # Optimized memory
 
