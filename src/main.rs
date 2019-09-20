@@ -220,8 +220,6 @@ fn find_project_path(name: String, settings_data: serde_json::value::Value) -> S
         if project == name { return path.to_string(); }
     }
     panic!("setting file is broken".red());
-    #[allow(dead_code)]
-    return "Should not execute this".to_string();
 }
 
 fn find_project_editor(name: String, settings_data: serde_json::value::Value) -> String {
