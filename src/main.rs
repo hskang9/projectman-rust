@@ -217,7 +217,7 @@ fn find_project_path(name: String, settings_data: serde_json::value::Value) -> S
     for i in 0..settings_data["projects"].as_array().unwrap().len() {
         let project = settings_data["projects"][i]["name"].as_str().unwrap();
         let path = settings_data["projects"][i]["path"].as_str().unwrap();
-        if project == name { println!("{:?}", path); return path.to_string(); }
+        if project == name { return path.to_string(); }
     }
     panic!("setting file is broken".red());
     return "Should not execute this".to_string();
@@ -227,7 +227,7 @@ fn find_project_editor(name: String, settings_data: serde_json::value::Value) ->
     for i in 0..settings_data["projects"].as_array().unwrap().len() {
         let project = settings_data["projects"][i]["name"].as_str().unwrap();
         let editor = settings_data["projects"][i]["editor"].as_str().unwrap();
-        if project == name { println!("{:?}", editor); return editor.to_string(); }
+        if project == name { return editor.to_string(); }
     }
     return "default".to_string();
 }
