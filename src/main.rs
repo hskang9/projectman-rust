@@ -165,6 +165,7 @@ fn add_project(settings_data: serde_json::value::Value) {
         println!("{}", format!("{}", "Project with this name already exists".red().bold()));
         return   
     }
+
     let new_project: Project = Project {
         name: result.clone(),
         path: path.unwrap().display().to_string(),
@@ -272,7 +273,7 @@ Options:
 Commands:
   open|o [projectName]         Open one of your saved projects
   add|save [projectDirectory]  Save current directory as a project
-  remove [projectName]         Remove the project
+  remove                       Remove the project
   seteditor [commandToOpen]    Set text editor to use
   edit                         Edit settings.json\n"
     )
