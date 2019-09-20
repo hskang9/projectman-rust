@@ -220,6 +220,7 @@ fn find_project_path(name: String, settings_data: serde_json::value::Value) -> S
         if project == name { return path.to_string(); }
     }
     panic!("setting file is broken".red());
+    #[allow(dead_code)]
     return "Should not execute this".to_string();
 }
 
@@ -251,7 +252,7 @@ fn open_process(command: String, path: String) {
 
 fn path_exists(path: String) -> bool{
     match fs::metadata(&path) {
-        Ok(some) => true,
+        Ok(_some) => true,
         Err(_) => false
     }
 }

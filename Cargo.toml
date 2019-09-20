@@ -1,9 +1,9 @@
 [package]
 name = "projectman"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["hskang9 <hskang9@gmail.com>"]
 edition = "2018"
-description = "pm is the Rust port of Projectman by Saurabh Daware. ProjectMan is a CLI which lets you add projects to favorites using command `pm add` and open them from anywhere you want using command `pm open`.\n Along with this there are also other commands like pm seteditor, pm remove, cd $(pm getpath) which we will see below."
+description = "projectman(in crate.io) is the Rust port of Projectman by Saurabh Daware. ProjectMan is a CLI which lets you add projects to favorites using command `pm add` and open them from anywhere you want using command `pm open`.\n Along with this there are also other commands like pm seteditor, pm remove."
 license = "MIT"
 readme = "README.md"
 keywords = ["cli", "project-management"]
