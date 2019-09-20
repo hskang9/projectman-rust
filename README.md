@@ -30,7 +30,8 @@ cargo install projectman
 ```
 
 # Future works
-- [ ] wasmer runtime support 
+- [ ] wasmer runtime support
+- [ ] add edit command 
 
 # Credits
 
