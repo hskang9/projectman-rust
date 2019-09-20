@@ -116,7 +116,7 @@ fn open_project(settings_data: serde_json::value::Value, project: Option<String>
             open_project(settings_data, Some(result))
         }
         // if input is in the list, open it
-        Some(ref x) if check_existence(x.clone(), settings_data.clone()) => {
+        Some(ref x) if project_exists(x.clone(), settings_data.clone()) => {
             let editor = find_project_editor(x.clone(), settings_data.clone());
             if editor != "default" {
                 let command = editor;
@@ -149,15 +149,24 @@ fn open_project(settings_data: serde_json::value::Value, project: Option<String>
 
 fn add_project(settings_data: serde_json::value::Value) {
     let mut next_settings = settings_data.clone();
-    let theme = CustomPromptCharacterTheme::new('\u{2692}');
+    let path = env::current_dir();
+    let hint = env::current_dir().unwrap().display().to_string().split("/").last().unwrap().to_string();
+    let theme = CustomPromptCharacterTheme::new(':');
     let project_name: String = Input::with_theme(&theme)
-        .with_prompt("Project name ")
+        .with_prompt("Project Name \u{2692}")
+        .allow_empty(true)
+        .default(hint)
         .interact()
         .unwrap();
     let result = project_name.clone();
-    let path = env::current_dir();
+
+    // Check whether the project already exists
+    if project_exists(result.clone(), next_settings.clone()) {
+        println!("{}", format!("{}", "Project with this name already exists".red().bold()));
+        return   
+    }
     let new_project: Project = Project {
-        name: project_name,
+        name: result.clone(),
         path: path.unwrap().display().to_string(),
         editor: settings_data["commandToOpen"].as_str().unwrap().to_string(),
     };
@@ -212,7 +221,7 @@ fn delete_project_json(
             return settings_data;
         }
     }
-    return settings_data;
+    panic!("The project to remove does not exist in the settings file".red());
 }
 
 fn set_editor(settings_data: serde_json::value::Value) {
@@ -291,7 +300,7 @@ fn find_project_editor(name: String, settings_data: serde_json::value::Value) ->
     return "default".to_string();
 }
 
-fn check_existence(name: String, setttings_data: serde_json::value::Value) -> bool {
+fn project_exists(name: String, setttings_data: serde_json::value::Value) -> bool {
     for i in 0..setttings_data["projects"].as_array().unwrap().len() {
         let project = setttings_data["projects"][i]["name"].as_str().unwrap();
         if project == name {
