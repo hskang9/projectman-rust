@@ -8,6 +8,8 @@ use dialoguer::{theme::ColorfulTheme, theme::CustomPromptCharacterTheme, Select,
 use std::fs::File;
 use std::io::prelude::*;
 use std::process::{Command};
+extern crate colored;
+use colored::*;
 
 #[derive(Serialize,Deserialize,Debug)]
 struct Project {
@@ -30,13 +32,31 @@ static SETEDITOR_PROMPT: &str = "? Select project to set editor";
 
     
 fn main() {
-    let settings_dir: String = format!("{}/.projectman/settings_rust.json", dirs::home_dir().unwrap().display());
+    let settings_dir: String = format!("{}/.projectman/settings.json", dirs::home_dir().unwrap().display());
 
     let default = json!({
             "commandToOpen": "code",
             "projects": []
         });
-    let settings_data = serde_json::from_str(&fs::read_to_string(settings_dir.clone()).unwrap()).unwrap_or(default); 
+
+    // Check whether setting file exists
+    if (!path_exists(settings_dir.clone())) {
+        println!("Generating new settings file at {}...", settings_dir.clone());
+        fs::create_dir_all(format!("{}/.projectman", dirs::home_dir().unwrap().display()));
+        File::create(&settings_dir);
+        save_settings(default.clone());
+    }
+
+    let file_string = match fs::read_to_string(settings_dir.clone()) {
+        Err(why) => {
+            panic!("Setting file error at {}: {}", settings_dir.red(), why);
+            },
+        Ok(file) => {
+            file
+        } 
+    };
+
+    let settings_data = serde_json::from_str(&file_string).unwrap(); 
     
     let args = Cli::from_args();
     match args.pattern {
@@ -61,7 +81,9 @@ fn list_projects(settings_data: serde_json::value::Value) -> Vec<String> {
 
 fn browse(prompt: &str, settings_data: serde_json::value::Value) -> String {
     let selections = list_projects(settings_data.clone());
-    if selections.len() == 0 { panic!("No project found");}
+    if selections.len() == 0 { println!("{}", format!("Project does not exist :( Add it using {} or cd till the project folder and type {}",
+     "`pm add [projectPath]`".yellow(), 
+     "`pm add`".yellow()).red().bold()); panic!("No project found");}
 
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt(prompt)
@@ -70,7 +92,7 @@ fn browse(prompt: &str, settings_data: serde_json::value::Value) -> String {
         .interact()
         .unwrap();
     let result = &selections[selection.clone()];
-    println!(">>> Opening {}...", result.clone());
+
     result.to_string()
 }
 
@@ -88,11 +110,16 @@ fn open_project(settings_data: serde_json::value::Value, project: Option<String>
             }
             let command = settings_data["commandToOpen"].as_str().unwrap(); 
             let path = find_project_path(project.clone().unwrap(), settings_data.clone());
+            println!(">>> Opening {}...", x.green());
             open_process(command.to_string(), path);
         },
         // if the input is not in the list, call support
         Some(ref _x) => {
-            println!("Project does not exist. Add it using `pm add [projectPath]` or cd till the project folder and type `pm add`");
+            let command = settings_data["commandToOpen"].as_str().unwrap(); 
+            println!("{}\n{}\n{}", 
+            "Could not open project :(".red().bold(), 
+            format!("Are you sure your editor uses command `{}` to open directories from terminal?", command.yellow().bold()),
+            format!("If not, use {} to set Editor/IDE of your choice", "`pm seteditor`".yellow().bold()));
         }
     }
 }
@@ -104,19 +131,20 @@ fn add_project(settings_data: serde_json::value::Value) {
         .with_prompt("Project name ")
         .interact()
         .unwrap();
+    let result = project_name.clone();
     let path = env::current_dir();
     let new_project:Project = Project{ name: project_name, path: path.unwrap().display().to_string(), editor: settings_data["commandToOpen"].as_str().unwrap().to_string()};
     let p = serde_json::to_value(new_project).unwrap();
     next_settings["projects"].as_array_mut().unwrap().push(p);
+    
 
     // Save next settings file
-    println!("{:?}", next_settings);
+    println!("{}", format!("Project {} is successfully added", result.cyan().bold()).green());
     save_settings(next_settings);
-    
 }
 
 fn save_settings(settings_data: serde_json::value::Value) {
-    let settings_dir: String = format!("{}/.projectman/settings_rust.json", dirs::home_dir().unwrap().display());
+    let settings_dir: String = format!("{}/.projectman/settings.json", dirs::home_dir().unwrap().display());
     let f = serde_json::to_string(&settings_data).unwrap();
     let mut file = File::create(&settings_dir).expect("Unable to write"); 
     file.write_all(f.as_bytes()).expect("Cannot write to a file"); 
@@ -129,7 +157,7 @@ fn remove_project(settings_data: serde_json::value::Value) {
 
     // Remove the project in json file
     next_settings = delete_project_json(next_settings, result.to_string());
-    println!("{:?}", next_settings);
+    println!("{}", format!("Project {} is successfully removed", result.cyan().bold()).green());
     save_settings(next_settings);
 }
 
@@ -154,7 +182,7 @@ fn set_editor(settings_data: serde_json::value::Value) {
 
     // Set editor for the project in json file
     next_settings = seteditor_project_json(next_settings, result.to_string(), input);
-    println!("{:?}", next_settings);
+    println!("{}", "Editor is successfully updated".green());
     save_settings(next_settings);
 }
 
@@ -188,7 +216,7 @@ fn find_project_path(name: String, settings_data: serde_json::value::Value) -> S
         let path = settings_data["projects"][i]["path"].as_str().unwrap();
         if project == name { println!("{:?}", path); return path.to_string(); }
     }
-    panic!("setting file is broken");
+    panic!("setting file is broken".red());
     return "Should not execute this".to_string();
 }
 
@@ -216,4 +244,11 @@ fn open_process(command: String, path: String) {
     .arg(&path)
     .spawn()
     .expect("Failed to process editor process");
+}
+
+fn path_exists(path: String) -> bool{
+    match fs::metadata(&path) {
+        Ok(some) => true,
+        Err(_) => false
+    }
 }

@@ -11,6 +11,12 @@ Total size of From the original(43MB) -> To Rust version(3.6MB)
 
 # Install
 
+Make sure you add ~/.cargo/bin to your PATH to be able to run the installed binaries
+
+```bash
+echo 'export PATH="$HOME/.cargo/bin:$PATH"'  >> ~/.bash_profile
+```
+
 ```Bash
 cargo install pm
 ```
