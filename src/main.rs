@@ -35,10 +35,12 @@ fn main() {
         });
 
     // Check whether setting file exists
-    if (!path_exists(settings_dir.clone())) {
+    if !path_exists(settings_dir.clone()) {
         println!("Generating new settings file at {}...", settings_dir.clone());
-        fs::create_dir_all(format!("{}/.projectman", dirs::home_dir().unwrap().display()));
-        File::create(&settings_dir);
+        match fs::create_dir_all(format!("{}/.projectman", dirs::home_dir().unwrap().display())) {
+            Ok(_) => (),
+            Err(why) => panic!("Failed to create dir: {}", why),
+        }
         save_settings(default.clone());
     }
 
