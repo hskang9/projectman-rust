@@ -1,7 +1,9 @@
+![projectman-rust](https://i.imgur.com/Xwvpfrl.png)
 # projectman-rust
 
-Projectman meets Rust
-projectman(in [crates.io](https://crates.io/crates/projectman) is the Rust port of Projectman by Saurabh Daware. ProjectMan is a CLI which lets you add projects to favorites using command `pm add` and open them from anywhere you want using command `pm open`.\n Along with this there are also other commands like pm seteditor, pm remove, cd $(pm getpath) which we will see below.
+Projectman meets Rust   
+Projectman(in [crates.io](https://crates.io/crates/projectman) is the Rust port of [Projectman](https://github.com/saurabhdaware/projectman) by [Saurabh Daware](https://github.com/saurabhdaware)
+. ProjectMan is a CLI which lets you add projects to favorites using command `pm add` and open them from anywhere you want using command `pm open`. Along with this there are also other commands like pm seteditor, pm remove, cd $(pm getpath) which we will see below.
 
 
 # Changes
@@ -32,5 +34,5 @@ cargo install projectman
 
 # Credits
 
-[project-man](https://github.com/saurabhdaware/projectman) by [Saurabh Daware](https://github.com/saurabhdaware)
+[Projectman](https://github.com/saurabhdaware/projectman) by [Saurabh Daware](https://github.com/saurabhdaware)
 
