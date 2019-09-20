@@ -17,6 +17,7 @@ Make sure you add ~/.cargo/bin to your PATH to be able to run the installed bina
 echo 'export PATH="$HOME/.cargo/bin:$PATH"'  >> ~/.bash_profile
 ```
 
+install CLI with cargo install
 ```Bash
 cargo install pm
 ```

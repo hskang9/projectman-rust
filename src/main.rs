@@ -25,11 +25,6 @@ struct Cli {
     project: Option<String>
 }
 
-// Prompt Constant Variables
-static OPEN_PROMPT: &str = "? Select project to open";
-static REMOVE_PROMPT: &str = "? Select project to remove";
-static SETEDITOR_PROMPT: &str = "? Select project to set editor";
-
     
 fn main() {
     let settings_dir: String = format!("{}/.projectman/settings.json", dirs::home_dir().unwrap().display());
@@ -96,10 +91,12 @@ fn browse(prompt: &str, settings_data: serde_json::value::Value) -> String {
     result.to_string()
 }
 
+
 fn open_project(settings_data: serde_json::value::Value, project: Option<String>) {
+    let open_prompt: &str = &format!("{} Select project to open", "?".green());
     match project {
         // if input is none give selections
-        None => { let result = browse(OPEN_PROMPT, settings_data.clone()); open_project(settings_data, Some(result)) },
+        None => { let result = browse(open_prompt, settings_data.clone()); open_project(settings_data, Some(result)) },
         // if input is in the list, open it
         Some(ref x) if check_existence(x.clone(), settings_data.clone())=> {
             let editor = find_project_editor(x.clone(), settings_data.clone());
@@ -152,8 +149,10 @@ fn save_settings(settings_data: serde_json::value::Value) {
 
 fn remove_project(settings_data: serde_json::value::Value) {
     let mut next_settings = settings_data.clone();
+    
 
-    let result = browse(REMOVE_PROMPT, settings_data);
+    let remove_prompt: &str = &format!("{} Select project to remove", "?".green());
+    let result = browse(remove_prompt, settings_data);
 
     // Remove the project in json file
     next_settings = delete_project_json(next_settings, result.to_string());
@@ -171,7 +170,9 @@ fn delete_project_json(mut settings_data: serde_json::value::Value, project: Str
 
 fn set_editor(settings_data: serde_json::value::Value) {
     let mut next_settings = settings_data.clone();
-    let result = browse(SETEDITOR_PROMPT, settings_data);
+
+    let seteditor_prompt: &str = &format!("{} Select project to set editor", "?".green());
+    let result = browse(seteditor_prompt, settings_data);
 
     let theme = CustomPromptCharacterTheme::new('>');
 
