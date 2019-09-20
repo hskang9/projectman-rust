@@ -4,11 +4,10 @@ extern crate dirs;
 use serde_json::json;
 use serde::{Serialize,Deserialize};
 use std::fs;
-#[macro_use] extern crate shell;
 use dialoguer::{theme::ColorfulTheme, theme::CustomPromptCharacterTheme, Select, Input};
-use std::error::Error;
 use std::fs::File;
 use std::io::prelude::*;
+use std::process::{Command};
 
 #[derive(Serialize,Deserialize,Debug)]
 struct Project {
@@ -72,7 +71,6 @@ fn browse(prompt: &str, settings_data: serde_json::value::Value) -> String {
         .unwrap();
     let result = &selections[selection.clone()];
     println!(">>> Opening {}...", result.clone());
-    //open_project(settings_data.clone(), Some(result.to_string()));
     result.to_string()
 }
 
@@ -86,11 +84,11 @@ fn open_project(settings_data: serde_json::value::Value, project: Option<String>
             if editor != "default" {
                 let command = editor;
                 let path = find_project_path(project.clone().unwrap(), settings_data.clone());
-                cmd!("{} {}", &command, &path).run().unwrap();
+                open_process(command, path);
             }
             let command = settings_data["commandToOpen"].as_str().unwrap(); 
             let path = find_project_path(project.clone().unwrap(), settings_data.clone());
-            cmd!("{} {}", command, &path).run().unwrap();
+            open_process(command.to_string(), path);
         },
         // if the input is not in the list, call support
         Some(ref _x) => {
@@ -210,4 +208,12 @@ fn check_existence(name: String, setttings_data: serde_json::value::Value) -> bo
         if project == name { return true; }
     }
     false
+}
+
+
+fn open_process(command: String, path: String) {
+    Command::new(&command)
+    .arg(&path)
+    .spawn()
+    .expect("Failed to process editor process");
 }
