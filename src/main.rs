@@ -122,11 +122,13 @@ fn open_project(settings_data: serde_json::value::Value, project: Option<String>
                 let command = editor;
                 let path = find_project_path(project.clone().unwrap(), settings_data.clone());
                 open_process(command, path);
+            } else {
+                let command = settings_data["commandToOpen"].as_str().unwrap();
+                let path = find_project_path(project.clone().unwrap(), settings_data.clone());
+                println!(">>> Opening {}...", x.green());
+                open_process(command.to_string(), path);
             }
-            let command = settings_data["commandToOpen"].as_str().unwrap();
-            let path = find_project_path(project.clone().unwrap(), settings_data.clone());
-            println!(">>> Opening {}...", x.green());
-            open_process(command.to_string(), path);
+            
         }
         // if the input is not in the list, call support
         Some(ref _x) => {
